@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>estructura_bbdd.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<div id='id_estructura' />
+<h2 id="estructura-bbdd">Estructura BBDD</h2>
+<div id='id_diagrama_general' />
+<h3 id="diagrama-general">Diagrama General</h3>
+<pre><code class="language-mermaid"><div class="mermaid">classDiagram
+
+class Division
+class Cliente
+class Articulo
+class Pedido
+class Cabecera_Pedido
+class Linea_Pedido
+class Agencia_Transporte
+class Albaran
+class Configuracion_Agencias
+class Caracteristicas_Articulos
+class Factura
+Division -- Pedido : "Sirve"
+Cliente -- Pedido : "Realiza"
+Division -- Cliente : "Tiene"
+Pedido -- Cabecera_Pedido : "Tiene"
+Pedido -- Agencia_Transporte : "Asignado a"
+Agencia_Transporte -- Configuracion_Agencias: "Tiene"
+Pedido -- Albaran : "Genera"
+Cliente -- Configuracion_Agencias : "Tiene"
+Cabecera_Pedido -- Linea_Pedido : "Tiene"
+Linea_Pedido -- Articulo: "Tiene"
+Articulo -- Caracteristicas_Articulos : "Descrito por"
+Pedido -- Factura : "Genera"
+</div></code></pre>
+<p>La BBDD representa diversas <strong>Divisiones</strong> que operan como empresas proveedoras. Estas, gestionan sus propios <strong>Clientes</strong>, a quienes deben suministrar los <strong>Artículos</strong> solicitados a través de <strong>Pedidos</strong>.</p>
+<p>Los Pedidos se componen de una <strong>Cabecera</strong> y <strong>Líneas</strong> de pedido. Para cada cabecera, existen una o varias líneas.</p>
+<p>A los pedidos se le asigna una <strong>Agencia de Transporte</strong>, que tiene una <strong>Configuración</strong> específica por Cliente.</p>
+<p>Las líneas de pedido contienen los artículos que se servirán a los clientes. Además se pueden consultar las <strong>Características</strong> detalladas de cada artículo (peso, longitud...).</p>
+<p>Después de realizar la entrega del pedido al cliente, se emite un <strong>Albarán</strong> que recopila los datos del pedido, así como los detalles de los paquetes y artículos suministrados.</p>
+<p>Algunos clientes tienen un servicio de facturación. Este proceso resulta en una <strong>Factura</strong> que contiene datos del pedido (cálculos, precio, impuestos, forma de pago...).</p>
+<p>Cada una de estas entidades, se describen con más detalle en la sección correspondiente.</p>
+<ul>
+<li><a href="#id_division">División</a></li>
+<li>Cliente</li>
+<li><a href="#id_pedidos">Pedido</a>
+<ul>
+<li>Cabecera</li>
+<li>Línea</li>
+</ul>
+</li>
+<li><a href="#id_articulos">Artículo</a>
+<ul>
+<li>Características detalladas</li>
+</ul>
+</li>
+<li>Agencia de Transporte
+<ul>
+<li>Configuración de agencia</li>
+</ul>
+</li>
+<li>Albarán</li>
+<li>Factura</li>
+</ul>
+<div id='id_division' />
+<h3 id="divisi%C3%B3n">División</h3>
+<p>Para consultar la <strong>división</strong> de la empresa o cliente en cuestión se consulta la tabla <strong>ipdivis</strong>.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> *
+  <span class="hljs-keyword">FROM</span> ipdivis;
+</div></code></pre>
+<p>Un ejemplo de los datos que nos vamos a encontrar en esta tabla:</p>
+<table>
+<thead>
+<tr>
+<th>CODDIV</th>
+<th>CODEMP</th>
+<th>CODDIVEMP</th>
+<th>DESDIV</th>
+<th>DABDIV</th>
+<th>NIF</th>
+<th>DIRECCION</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9148</td>
+<td>001</td>
+<td>9148</td>
+<td>MATERIALES AUROVITAS</td>
+<td>AUROVITAS</td>
+<td>A85104875</td>
+<td>AVDA DE BURGOS 16 D 5ª PLANTA</td>
+</tr>
+<tr>
+<td>111</td>
+<td>001</td>
+<td>111</td>
+<td>URIAGE</td>
+<td>URIAGE</td>
+<td>B84039544</td>
+<td>JUAN BRAVO</td>
+</tr>
+<tr>
+<td>033</td>
+<td>001</td>
+<td>033</td>
+<td>SEDANA MEDICAL AB</td>
+<td>SEDANA</td>
+<td>W0302645G</td>
+<td>PASEO DE LA CASTELLANA NUM</td>
+</tr>
+<tr>
+<td>172</td>
+<td>001</td>
+<td>172</td>
+<td>VIROPHARMA SPAIN</td>
+<td>VIROPHARM</td>
+<td>B86225760</td>
+<td>Avenida del Partenón</td>
+</tr>
+<tr>
+<td>169</td>
+<td>001</td>
+<td>169</td>
+<td>ARTEMIS</td>
+<td>ARTEMIS</td>
+<td>B86141504</td>
+<td>CEA BERMUDEZ</td>
+</tr>
+<tr>
+<td>005</td>
+<td>001</td>
+<td>005</td>
+<td>RATIOPHARM INTERNACIONAL</td>
+<td>RATIOINT</td>
+<td>A79347134</td>
+<td>C/ ANABEL SEGURA</td>
+</tr>
+<tr>
+<td>311</td>
+<td>001</td>
+<td>311</td>
+<td>BECTON DICKINSON MMS</td>
+<td>BECTON MMS</td>
+<td>A50140706</td>
+<td>CAMINO DE VALDEOLIVA S/N</td>
+</tr>
+</tbody>
+</table>
+<div id='id_pedidos' />
+<h3 id="pedidos">Pedidos</h3>
+<p>Los <strong>pedidos</strong> están formados por una cabecera y una o múltiples líneas. Esta información, que desglosaremos y detallaremos en secciones posteriores, se almacena en la BBDD en las siguientes tablas:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> ipcabpeorig; <span class="hljs-comment">-- Cabecera de pedido origen</span>
+<span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> iplinpeorig; <span class="hljs-comment">-- Líneas de pedido origen</span>
+
+<span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> ipcabpe; <span class="hljs-comment">-- Cabecera de pedido</span>
+<span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> iplinpe; <span class="hljs-comment">-- Líneas de pedido</span>
+</div></code></pre>
+<div id='id_pedido_origen' />
+<h4 id="pedido-origen">Pedido Origen</h4>
+<p>El pedido origen es el resultado de la carga de datos inicial de un determinado pedido facilitado por la empresa.</p>
+<p>Este pedido puede facilitarse en distintos formatos (<strong>txt</strong>, <strong>xlsx</strong>, <strong>csv</strong>...) y ha de ser registrado en la BBDD. En este momento no se cuenta con todos los datos necesarios para conformar el pedido, pues muchos de ellos son <strong>calculados</strong> y será necesario ejecutar determinados procesos en la BBDD para crear el pedido final.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> ipcabpeorig; <span class="hljs-comment">-- Cabecera de pedido origen</span>
+<span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> <span class="hljs-keyword">from</span> iplinpeorig; <span class="hljs-comment">-- Líneas de pedido origen</span>
+</div></code></pre>
+<div id='id_pedido_final' />
+<h4 id="pedido-final">Pedido Final</h4>
+<p>Una vez cargado el <a href="#id_pedido_origen">pedido origen</a> se harán los procedimientos almacenados y serán calculados todos los campos necesarios para conformar el pedido.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> ipcabpe; <span class="hljs-comment">-- Cabecera de pedido</span>
+<span class="hljs-keyword">SELECT</span> * 
+  <span class="hljs-keyword">FROM</span> iplinpe; <span class="hljs-comment">-- Líneas de pedido</span>
+</div></code></pre>
+<div id='id_cabecera_pedido' />
+<h4 id="cabecera-de-pedido">Cabecera de pedido</h4>
+<p>A continuación se muestran los campos que forman la <strong>clave primaria</strong> de la cabecera del pedido.</p>
+<table>
+<tr>
+        <th>Campo BBDD</th>
+        <th>Descripción</th>
+    </tr>
+    <tr>
+        <td>codped</td>
+        <td>Código del pedido</td>
+    </tr>
+    <tr>
+        <td>coddiv</td>
+        <td>División o compañía del pedido</td>
+    </tr>
+    <tr>
+        <td>seqped</td>
+        <td>Versión del pedido</td>
+    </tr>
+    <tr>
+        <td>anoped</td>
+        <td>Año del pedido</td>
+    </tr>  
+</table>
+<div id='id_articulos' />
+<h3 id="art%C3%ADculos">Artículos</h3>
+<p>Cada <strong>División</strong> tiene sus propios <strong>Artículos</strong>. El maestro de artículos es la tabla <strong>ipartic</strong>.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> *
+  <span class="hljs-keyword">FROM</span> ipartic
+</div></code></pre>
+<p>En esta tabla se encuentra toda la información del artículo, como su precio, su descripción... Se almacena por código de división (<strong>coddiv</strong>) y código de artículo (<strong>codartdiv</strong>).</p>
+<p>De esta forma, una determinada división numera todos sus artículos. A continuación lo veremos con un ejemplo.</p>
+<p>La División KARO (<strong>coddiv</strong>: 471) tiene los artículos: 1002184, 1002183, 1002182, 1002016... Estos códigos (<strong>codartdiv</strong>) identifican los artículos dentro de la división.</p>
+<p>Para identificar y detallar los artículos <strong>ALLOGA</strong> tiene un código de artículo genérico (<strong>codart</strong>) que obtiene al concatenar <strong>coddiv</strong> y <strong>codartdiv</strong>. De esta forma, el artículo 1002184 de KARO (división 471), será para ALLOGA: 4711002184.</p>
+<p>A continuación veamos cómo se vería la consulta en la tabla maestro de artículos.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> codart, coddiv, codartdiv, codnac, codean, desart
+  <span class="hljs-keyword">FROM</span> ipartic
+ <span class="hljs-keyword">WHERE</span> coddiv = <span class="hljs-string">'471'</span>
+   <span class="hljs-keyword">AND</span> codart <span class="hljs-keyword">IN</span> (<span class="hljs-string">'4711002184'</span>,<span class="hljs-string">'4711002183'</span>,<span class="hljs-string">'4711002182'</span>,<span class="hljs-string">'4711002016'</span>);
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>CODART</th>
+<th>CODDIV</th>
+<th>CODARTDIV</th>
+<th>CODNAC</th>
+<th>CODEAN</th>
+<th>DESART</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4711002184</td>
+<td>471</td>
+<td>1002184</td>
+<td>193955.5</td>
+<td>05425012533547</td>
+<td>REMESCAR PROGRAMA CORRECT CONTORNO OJOS PARPADOS CAIDOS 8 ML</td>
+</tr>
+<tr>
+<td>4711002183</td>
+<td>471</td>
+<td>1002183</td>
+<td>191939.7</td>
+<td>05425012533257</td>
+<td>REMESCAR PROGRAMA CORRECTOR BOLSAS+REPARADOR NOCHE</td>
+</tr>
+<tr>
+<td>4711002182</td>
+<td>471</td>
+<td>1002182</td>
+<td>189452.6</td>
+<td>05425012532991</td>
+<td>REMESCAR BOLSAS Y OJERAS 16ML</td>
+</tr>
+<tr>
+<td>4711002016</td>
+<td>471</td>
+<td>1002016</td>
+<td>160849</td>
+<td>07350087736334</td>
+<td>E45 ERYPLAST PASTA AL AGUA 200GR</td>
+</tr>
+</tbody>
+</table>
+<p>Para cada uno de esos artículos (<strong>codart</strong>) podemos consultar sus características específicas en la tabla <strong>ipartproplog</strong>.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> *
+  <span class="hljs-keyword">FROM</span> ipartproplog
+</div></code></pre>
+<p>Continuando con el ejemplo anterior:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> codart, pvpvigente, fecvignp, pvpnuevo,largouni, anchouni, altouni, pesouni, unipaq
+  <span class="hljs-keyword">FROM</span> ipartproplog
+ <span class="hljs-keyword">WHERE</span> codart <span class="hljs-keyword">IN</span> (<span class="hljs-string">'4711002184'</span>,<span class="hljs-string">'4711002183'</span>,<span class="hljs-string">'4711002182'</span>,<span class="hljs-string">'4711002016'</span>);
+</div></code></pre>
+<p>En esta tabla podremos ver el detalle de estos artículos, con campos como ancho, largo, alto, peso...</p>
+<table>
+<thead>
+<tr>
+<th>CODART</th>
+<th>PVPVIGENTE</th>
+<th>FECVIGNP</th>
+<th>PVPNUEVO</th>
+<th>LARGOUNI</th>
+<th>ANCHOUNI</th>
+<th>ALTOUNI</th>
+<th>PESOUNI</th>
+<th>UNIPAQ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4711002184</td>
+<td>29</td>
+<td>69</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+<td>10</td>
+<td>14</td>
+<td>20</td>
+</tr>
+<tr>
+<td>4711002183</td>
+<td>32</td>
+<td>07</td>
+<td>0</td>
+<td>0</td>
+<td>40</td>
+<td>100</td>
+<td>145</td>
+<td>49</td>
+</tr>
+<tr>
+<td>4711002182</td>
+<td>39</td>
+<td>45</td>
+<td>0</td>
+<td>0</td>
+<td>60</td>
+<td>4</td>
+<td>170</td>
+<td>50</td>
+</tr>
+<tr>
+<td>4711002016</td>
+<td>13</td>
+<td>89</td>
+<td>0</td>
+<td>0</td>
+<td>44</td>
+<td>60</td>
+<td>180</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<div id='id_status' />
+<h3 id="status">Status</h3>
+<p>En esta tabla podemos ver la relación entre cada status y su descripción.</p>
+<p>Ejemplo:</p>
+<p>Al consultar una línea de pedido, podemos ver su status en el campo <strong>status</strong>.</p>
+<p>Para conocer la descripción de este estado debemos consultar la tabla <strong>ipstatus</strong>.</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">SELECT</span> tipostatus, <span class="hljs-keyword">status</span>, desstatus
+  <span class="hljs-keyword">FROM</span> ipstatus
+ <span class="hljs-keyword">WHERE</span> tipostatus = <span class="hljs-string">'LP'</span> <span class="hljs-comment">-- Línea de Pedido</span>
+   <span class="hljs-keyword">AND</span> <span class="hljs-keyword">status</span> = <span class="hljs-string">'500'</span>; <span class="hljs-comment">-- Status</span>
+</div></code></pre>
+<p>Un ejemplo con el contenido de la tabla podría ser el siguiente:</p>
+<table>
+<thead>
+<tr>
+<th>tipostatus</th>
+<th>status</th>
+<th>desstatus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LP</td>
+<td>5000</td>
+<td>LINEA DE ACONDICIONAMIENTO</td>
+</tr>
+<tr>
+<td>CP</td>
+<td>-6950</td>
+<td>ERROR GENERANDO DEM. DE ACONDI</td>
+</tr>
+</tbody>
+</table>
+<p>A continuación se muestran algunos de los tipos más utilizados:</p>
+<table>
+	<tr>
+        <th>Tipo Status</th>
+        <th>Descripción</th>
+    </tr>
+	<tr>
+        <td>LP</td>
+        <td>Línea de Pedido</td>
+    </tr>
+	<tr>
+        <td>CP</td>
+        <td>Cabecera de Pedido</td>
+    </tr>
+	<tr>
+        <td>IRS</td>
+        <td>Impresiones (Facturas)</td>
+    </tr>
+</table>
+<div id='id_procesos' />
+<h3 id="procesos">Procesos</h3>
+<div id='id_asignacion_agencias_transporte' />
+<h4 id="asignaci%C3%B3n-de-agencias-de-transporte">Asignación de Agencias de Transporte</h4>
+<p>Los pedidos en este sistema constan de una estructura de <strong>Cabecera</strong> y <strong>Líneas</strong>. Cada cabecera está asociada con una o varias líneas específicas. Al iniciar la creación de un pedido, se generan tanto un pedido origen como un pedido final, lo que implica la existencia de cuatro entidades de datos: cabecera origen, línea origen, cabecera y línea.</p>
+<p>Cuando un pedido evoluciona desde su estado de origen hasta el estado final, se procede a asignarle una <strong>Agencia de Transporte</strong>. Esta asignación se realiza mediante la consulta de una tabla que contiene la configuración detallada de las agencias. La configuración es específica de cada <strong>Cliente</strong>.</p>
+<p>En el momento en el que el cliente genera un pedido, la división correspondiente se encargará de su gestión. Para comunicar el pedido, el cliente tiene la flexibilidad de enviar los datos en el formato que desee, ya sea XML, HTML, Excel u otros formatos. En este punto, se genera el pedido origen, incluyendo tanto la cabecera como las líneas, extrayendo los detalles del pedido directamente del origen proporcionado por el cliente. Posteriormente, se procede a la asignación de una agencia de transporte, marcando así la transición del pedido desde su origen hasta el estado final. Es importante destacar que cada cliente tiene asociada una configuración específica en la agencia de transporte, ajustada inicialmente al realizar el pedido, para garantizar un servicio personalizado y eficiente.</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant Cliente
+    participant Sistema
+    participant Division
+    participant Agencia_Transporte
+    participant Configuracion_Agencia
+    participant Base_de_Datos
+
+    Cliente ->> Sistema: Enviar Datos del Pedido (XML, HTML, Excel, etc.)
+    Sistema ->> Division: Crear Pedido Origen
+    Division ->> Base_de_Datos: Generar Cabecera y Líneas del Pedido
+    Base_de_Datos -->> Division: Pedido Origen creado (Cabecera y Líneas)
+
+    Division ->> Base_de_Datos: Asignar Agencia de Transporte
+    Base_de_Datos -->> Division: Agencia de Transporte asignada
+    Division -->> Agencia_Transporte: Agencia asignada
+    Agencia_Transporte ->> Configuracion_Agencia: Consultar Configuración para Cliente
+    Configuracion_Agencia -->> Agencia_Transporte: Configuración de Agencia para Cliente
+    Agencia_Transporte -->> Division: Agencia de Transporte configurada
+
+
+    Division -->> Sistema: Pedido Origen Listo
+    Sistema ->> Base_de_Datos: Generar Pedido Final
+    Base_de_Datos -->> Sistema: Pedido Final creado
+    Sistema -->> Cliente: Pedido Finalizado
+</div></code></pre>
+
+</body>
+</html>
